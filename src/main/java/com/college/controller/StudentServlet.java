@@ -25,7 +25,7 @@ public class StudentServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
         if (action == null) {
-            action = "list";
+            action = "home";
         }
 
         try {
@@ -37,8 +37,11 @@ public class StudentServlet extends HttpServlet {
                     deleteStudent(request, response);
                     break;
                 case "list":
-                default:
                     listStudents(request, response);
+                    break;
+                case "home":
+                default:
+                    request.getRequestDispatcher("index.jsp").forward(request, response);
                     break;
             }
         } catch (SQLException e) {
@@ -66,6 +69,7 @@ public class StudentServlet extends HttpServlet {
     private void listStudents(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
         List<Student> listStudents = studentDAO.getAllStudents();
         request.setAttribute("listStudents", listStudents);
+        request.setAttribute("searchPerformed", true);
         request.getRequestDispatcher("index.jsp").forward(request, response);
     }
 
@@ -83,6 +87,7 @@ public class StudentServlet extends HttpServlet {
         }
 
         request.setAttribute("listStudents", searchResults);
+        request.setAttribute("searchPerformed", true);
         request.getRequestDispatcher("index.jsp").forward(request, response);
     }
 
